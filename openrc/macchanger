@@ -1,0 +1,17 @@
+#!/sbin/openrc-run
+#Ref:https://forums.gentoo.org/viewtopic-t-1015264-start-0.html
+depend()
+{
+	after udev
+	before dhcpcd	
+}
+
+
+start()
+{
+	ebegin "Changing MAC Addresses"
+	if ls /sys/class/net |grep "wlan0" > /dev/null;then
+		macchanger -e wlan0
+	fi
+	eend $? 
+}

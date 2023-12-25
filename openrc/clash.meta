@@ -1,0 +1,15 @@
+#!/sbin/openrc-run
+
+name="Clash-Meta"
+description="Clash-Meta daemon, A rule-based proxy in Go."
+
+command="/opt/clash/mihomo"
+command_args="-d /home/young/.config/clash"
+pidfile="/run/${RC_SVCNAME}.pid"
+
+command_background=true
+
+depend() {
+    need net
+    after net
+}

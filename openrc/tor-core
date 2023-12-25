@@ -1,0 +1,17 @@
+#!/sbin/openrc-run
+
+name="tor-core"
+description="Anonymizing overlay network."
+
+command="/usr/bin/tor"
+command_args="-f /etc/tor/torrc"
+pidfile="/run/${RC_SVCNAME}.pid"
+
+command_background=true
+
+depend() {
+    need net
+    after net
+    need clash.meta
+    after clash.meta
+}
