@@ -1,0 +1,16 @@
+# 20240109
+# GPL-3
+# Ref:https://wiki.gentoo.org/wiki/Allow_only_known_usb_devices#Writing_eudev_rules
+# Enable only known hid devices
+
+# Skeep not USB
+SUBSYSTEM!="usb", GOTO="hid_end"
+# Skeep remove actions
+ACTION=="remove", GOTO="hid_end"
+
+# whitelist specific hid devices
+
+# Disable all other hid devices
+SUBSYSTEMS=="usb", DRIVERS=="usbhid", ACTION=="add", ATTR{authorized}="0"
+
+LABEL="hid_end"
