@@ -1,4 +1,3 @@
-# Ref:https://sss.red/archives/netboot-xyz-replace-mirrors.html
 #!ipxe
 
 menu Custom Installers - Current Arch [ ${arch} ]
@@ -27,7 +26,7 @@ goto custom-url
 #######################################
 
 # set location of custom netboot.xyz live assets
-# set live_endpoint https://github.gogodoge66.eu.org/https://github.com/netbootxyz
+# set live_endpoint http://github.gogodoge66.eu.org/https://github.com/netbootxyz
 
 ### AlmaLinux
 set almalinux_mirror https://mirrors.aliyun.com
