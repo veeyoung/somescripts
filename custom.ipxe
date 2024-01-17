@@ -1,4 +1,5 @@
 #!ipxe
+# Ref:https://sss.red/archives/netboot-xyz-replace-mirrors.html
 
 menu Custom Installers - Current Arch [ ${arch} ]
 item --gap Default:
