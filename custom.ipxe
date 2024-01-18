@@ -117,7 +117,7 @@ goto custom_exit
 
 cpuid --ext 29 && set arch amd64 || set arch x86
 dhcp
-set boot-url http://github.gogodoge66.eu.org/https://github.com/veeyoung/somescripts/releases/download/firpeiso/FirPE-V1.8.2.iso
+set boot-url https://dl.moapp.me/https://github.com/veeyoung/somescripts/releases/download/firpeiso/FirPE-V1.8.2.iso
 sanboot ${boot-url}
 boot
 
