@@ -5,8 +5,8 @@ dhcp
 set boot-url http://github.gogodoge66.eu.org/https://github.com/veeyoung/somescripts/releases/download/static
 imgfree
 kernel wimboot
-initrd -n bootmgr     ${boot-url}/bootmgr       bootmgr ||
-initrd -n bcd         ${boot-url}/bcd      bcd ||
-initrd -n boot.sdi    ${boot-url}/boot.sdi boot.sdi ||
+initrd -n bootmgr     ${boot-url}/bootmgr       bootmgr
+initrd -n bcd         ${boot-url}/bcd      bcd
+initrd -n boot.sdi    ${boot-url}/boot.sdi boot.sdi
 initrd -n boot.wim    ${boot-url}/boot.wim boot.wim
 boot
