@@ -1,4 +1,0 @@
-#!ipxe
-
-sanboot https://download.mcloud.139.com/storageWeb/servlet/downloadServlet?code=S0IwVDExV1dncWswZTQwODkxN3c0VXpGeUpN&un=3717C5DF49522729A24FB0EE4239A777C2D8EA5524546CA02BCCEF2A4BDB1B6B&dom=D961&rate=0&txType=0
-boot
