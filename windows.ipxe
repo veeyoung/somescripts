@@ -4,6 +4,7 @@ cpuid --ext 29 && set arch amd64 || set arch x86
 dhcp
 set boot-url http://github.gogodoge66.eu.org/https://github.com/veeyoung/somescripts/releases/download/static
 imgfree
+kernel wimboot
 initrd -n bootmgr     ${boot-url}/bootmgr       bootmgr
 initrd -n bootmgr.efi ${boot-url}/bootmgr.efi   bootmgr.efi
 initrd -n bcd         ${boot-url}/bcd           bcd
