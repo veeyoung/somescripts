@@ -7,6 +7,8 @@ item custom_mirror ${space} Set China Mirror
 item exit ${space} Exit Custom
 item --gap Linux Distros:
 item alpinevirt ${space} Alpine Linux Virtual
+item --gap Windows:
+item lstc_rev ${space} Windows 10 LTSC 2019 Recovery
 choose menu || goto custom_exit
 echo ${cls}
 goto ${menu} ||
@@ -112,6 +114,20 @@ set ubuntu_base_dir ubuntu
 echo configuration completed
 sleep 2
 goto custom_exit
+
+:lstc_rev
+
+cpuid --ext 29 && set arch amd64 || set arch x86
+dhcp
+set boot-url https://github.gogodoge66.eu.org/https://github.com/veeyoung/somescripts/releases/download/lstcrev
+imgfree
+kernel wimboot
+initrd -n bootmgr     ${boot-url}/bootmgr       bootmgr
+initrd -n bootmgr.efi ${boot-url}/bootmgr.efi   bootmgr.efi
+initrd -n bcd         ${boot-url}/bcd           bcd
+initrd -n boot.sdi    ${boot-url}/boot.sdi      boot.sdi
+initrd -n boot.wim    ${boot-url}/boot.wim      boot.wim
+boot
 
 :exit
 goto custom_exit
