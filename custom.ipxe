@@ -117,10 +117,7 @@ goto custom_exit
 
 :lstc_rev
 
-cpuid --ext 29 && set arch amd64 || set arch x86
-dhcp
 set boot-url https://github.gogodoge66.eu.org/https://github.com/veeyoung/somescripts/releases/download/lstcrev
-imgfree
 initrd -n bootmgr     ${boot-url}/bootmgr       bootmgr
 initrd -n bootmgr.efi ${boot-url}/bootmgr.efi   bootmgr.efi
 initrd -n bcd         ${boot-url}/bcd           bcd
