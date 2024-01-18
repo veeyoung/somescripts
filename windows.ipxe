@@ -1,7 +1,7 @@
 :lstc_rev
 
 set boot-url http://github.gogodoge66.eu.org/https://github.com/veeyoung/somescripts/releases/download/lstcrev
-imgfree
+kernel wimboot
 initrd -n bootmgr     ${boot-url}/bootmgr       bootmgr
 initrd -n bootmgr.efi ${boot-url}/bootmgr.efi   bootmgr.efi
 initrd -n bcd         ${boot-url}/bcd           bcd
