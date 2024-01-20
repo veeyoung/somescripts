@@ -119,7 +119,7 @@ cpuid --ext 29 && set arch amd64 || set arch x86
 dhcp
 set boot-url http://github.gogodoge66.eu.org/https://github.com/veeyoung/somescripts/releases/download/firpeiso/FirPE-V1.8.2.iso
 set keep-san 1
-sanboot 0xff ${boot-url}
+sanboot --drive 0xff ${boot-url}
 boot
 
 :exit
