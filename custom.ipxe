@@ -2,13 +2,17 @@
 # Ref:https://sss.red/archives/netboot-xyz-replace-mirrors.html
 
 set github_mirror http://github.gogodoge66.eu.org
-set my_git_repo ${github_mirror}/https://github.com/veeyoung
+set my_git_repo ${github_mirror}/https://github.com/veeyoung/somescripts/releases/download
+set my_git_raw ${github_mirror}/https://raw.githubusercontent.com/veeyoung/somescripts/main
+set pe-base-url ${my_git_repo}/lstcrec
+
 menu Custom Installers - Current Arch [ ${arch} ]
 item --gap Default:
 item custom_mirror ${space} Set China Mirror
 item exit ${space} Exit Custom
 item --gap Windows:
 item wepe ${space} WePE_64_V2.3
+item lstc_rec ${space} Windows10 2019 ltsc recovery
 item --gap ustc pxe:
 item ustc_pxe ${space} ustc pxe
 choose menu || goto custom_exit
@@ -117,20 +121,24 @@ echo configuration completed
 sleep 2
 goto custom_exit
 
+:win_pe_base
+imgfree
+kernel ${pe-base-url}/wimboot
+initrd -n bootmgr       ${pe-base-url}/bootmgr      bootmgr
+initrd -n bootmgr.efi   ${pe-base-url}/bootmgr.efi  bootmgr.efi
+initrd -n bcd           ${pe-base-url}/bcd          bcd
+initrd -n boot.sdi      ${pe-base-url}/boot.sdi     boot.sdi
+initrd -n boot.wim      ${boot-url}                 boot.wim
+boot ||
+goto exit
+
 :wepe
+set boot-url ${my_git_repo}/wepe/WEPE64.WIM
+goto win_pe_base
 
-set wepe-url ${my_git_repo}/somescripts/releases/download/wepe
-iseq ${platform} efi && goto wepe_efi || goto wepe_bios
-
-:wepe_efi
-set keep-san 1
-sanboot --drive 0xff ${wepe-url}/WePE_64_V2.3.iso ||
-goto exit
-
-:wepe_bios
-initrd ${wepe-url}/WePE_64_V2.3.iso
-chain ${wepe-url}/memdisk iso raw ||
-goto exit
+:lstc_rec
+set boot-url ${pe-base-url}/boot.wim
+goto win_pe_base
 
 # https://lug.ustc.edu.cn/planet/2018/10/PXE-intro/
 :ustc_pxe
