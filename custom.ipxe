@@ -6,7 +6,7 @@ item --gap Default:
 item custom_mirror ${space} Set China Mirror
 item exit ${space} Exit Custom
 item --gap Windows:
-item firpe ${space} firpe iso
+item lstcWinpe ${space} Windows10 ltsc 2019 recovery
 choose menu || goto custom_exit
 echo ${cls}
 goto ${menu} ||
@@ -113,21 +113,16 @@ echo configuration completed
 sleep 2
 goto custom_exit
 
-:firpe
-
-set firpe http://github.gogodoge66.eu.org/https://github.com/veeyoung/somescripts/releases/download/firpeiso
-
-iseq ${platform} efi && goto firpe_efi || goto firpe_bios
-
-:firpe_efi
-set boot-url ${firpe}/FirPE-V1.8.2.iso
-set keep-san 1
-sanboot --drive 0xff ${boot-url}
-
-:firpe_bios
-initrd ${firpe}/FirPE-V1.8.2.iso
-chain ${firpe}/memdisk iso raw
-goto custom_exit
+:lstcWinpe
+set boot-url http://github.gogodoge66.eu.org/https://github.com/veeyoung/somescripts/releases/download/lstcrev
+imgfree
+kernel ${boot-url}/wimboot
+initrd -n bootmgr     ${boot-url}/bootmgr       bootmgr
+initrd -n bootmgr.efi ${boot-url}/bootmgr.efi   bootmgr.efi
+initrd -n bcd         ${boot-url}/bcd           bcd
+initrd -n boot.sdi    ${boot-url}/boot.sdi      boot.sdi
+initrd -n boot.wim    ${boot-url}/boot.wim      boot.wim
+boot || goto exit
 
 :exit
 goto custom_exit
