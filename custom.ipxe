@@ -1,12 +1,16 @@
 #!ipxe
 # Ref:https://sss.red/archives/netboot-xyz-replace-mirrors.html
 
+set github_mirror http://github.gogodoge66.eu.org
+set my_git_repo ${github_mirror}/https://github.com/veeyoung
 menu Custom Installers - Current Arch [ ${arch} ]
 item --gap Default:
 item custom_mirror ${space} Set China Mirror
 item exit ${space} Exit Custom
 item --gap Windows:
-item lstcWinpe ${space} Windows10 ltsc 2019 recovery
+item wepe ${space} WePE_64_V2.3
+item --gap ustc pxe:
+item ustc_pxe ${space} ustc pxe
 choose menu || goto custom_exit
 echo ${cls}
 goto ${menu} ||
@@ -27,7 +31,7 @@ goto custom-url
 #######################################
 
 # set location of custom netboot.xyz live assets
-set live_endpoint http://github.gogodoge66.eu.org/https://github.com/netbootxyz
+set live_endpoint ${github_mirror}/${live_endpoint}
 
 ### AlmaLinux
 set almalinux_mirror https://mirrors.aliyun.com
@@ -113,16 +117,26 @@ echo configuration completed
 sleep 2
 goto custom_exit
 
-:lstcWinpe
-set boot-url http://github.gogodoge66.eu.org/https://github.com/veeyoung/somescripts/releases/download/lstcrev
-imgfree
-kernel ${boot-url}/wimboot
-initrd -n bootmgr     ${boot-url}/bootmgr       bootmgr
-initrd -n bootmgr.efi ${boot-url}/bootmgr.efi   bootmgr.efi
-initrd -n bcd         ${boot-url}/bcd           bcd
-initrd -n boot.sdi    ${boot-url}/boot.sdi      boot.sdi
-initrd -n boot.wim    ${boot-url}/boot.wim      boot.wim
-boot || goto exit
+:wepe
+
+set wepe-url ${my_git_repo}/somescripts/releases/download/wepe
+iseq ${platform} efi && goto wepe_efi || goto wepe_bios
+
+:wepe_efi
+set keep-san 1
+sanboot --drive 0xff ${wepe-url}/WePE_64_V2.3.iso ||
+goto exit
+
+:wepe_bios
+initrd ${wepe-url}/WePE_64_V2.3.iso
+chain ${wepe-url}/memdisk iso raw ||
+goto exit
+
+# https://lug.ustc.edu.cn/planet/2018/10/PXE-intro/
+:ustc_pxe
+set 210:string http://202.38.93.94/boot/tftp/
+chain ${210:string}pxelinux.0 ||
+goto exit
 
 :exit
 goto custom_exit
