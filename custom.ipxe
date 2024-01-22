@@ -124,7 +124,8 @@ goto custom_exit
 :win_pe_base
 imgfree
 kernel ${pe-base-url}/wimboot
-iseq ${platform} efi && initrd ${pe-base-url}/bootx64.efi BOOTX64.EFI
+iseq ${platform} efi && initrd ${pe-base-url}/bootx64.efi BOOTX64.EFI ||
+initrd -n bootmgr       ${pe-base-url}/bootmgr      bootmgr
 initrd -n bcd           ${pe-base-url}/bcd          bcd
 initrd -n boot.sdi      ${pe-base-url}/boot.sdi     boot.sdi
 initrd -n boot.wim      ${boot-url}                 boot.wim
