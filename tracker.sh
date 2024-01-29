@@ -80,10 +80,10 @@ ADD_TRACKERS() {
         echo -e "$(DATE_TIME) ${ERROR} '${QBITTORRENT_CONF}' does not exist."
         exit 1
     else
-        if [ -z $(grep 'Session\\AddTrackersEnabled=' ${QBITTORRENT_CONF}) ]; then
+        if [ -z "$(grep 'Session\\AddTrackersEnabled=' ${QBITTORRENT_CONF})" ]; then
             sed -i '/^\[BitTorrent\]/a\Session\\AddTrackersEnabled=true' ${QBITTORRENT_CONF}
         fi
-        if [ -n $(grep 'Session\\AdditionalTrackers=' ${QBITTORRENT_CONF}) ]; then
+        if [ -z "$(grep 'Session\\AdditionalTrackers=' ${QBITTORRENT_CONF})" ]; then
             sed -i '/^Session\\AddTrackersEnabled=/a\Session\\AdditionalTrackers=' ${QBITTORRENT_CONF}
         fi
         CLEANED_TRACKER=$(echo "${TRACKER}" | sed ':a;N;$!ba;s/\n\n/\\\\n/g')
