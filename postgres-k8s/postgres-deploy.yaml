@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: postgres
+spec:
+  selector:
+   matchLabels:
+    app: postgres
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      nodeName: node2
+      containers:
+        - name: postgres
+          image: postgres:latest
+          imagePullPolicy: "IfNotPresent"
+          env:
+           - name: POSTGRES_USER
+             valueFrom:
+               secretKeyRef:
+                 name: postgres-secret
+                 key: postgres-root-username
+           - name: POSTGRES_PASSWORD
+             valueFrom:
+               secretKeyRef:
+                 name: postgres-secret
+                 key: postgres-root-password
+           - name: POSTGRES_DB
+             valueFrom:
+               configMapKeyRef:
+                 name: postgres-configmap
+                 key: postgres-dbname
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+    name: postgres
+    labels:
+    app: postgres
+    namespace: postgres
+spec:
+    ports:
+    - name: postgres
+        port: 5432
+        nodePort: 30432
+    type: NodePort
+    selector:
+    app: postgres
