@@ -15,12 +15,20 @@ class Resquest(BaseHTTPRequestHandler):
             tokens = f.read().splitlines()
         if query.get('token', [''])[0] in tokens:
             self.send_response(200)
-            self.send_header("Content-type", "text/plain; charset=utf-8")
-            self.end_headers()
-            with open('/dev/shm/config.yaml', 'r', encoding="utf-8") as f:
-                nodeContent = f.read()
-                http_response = nodeContent.encode('utf-8')
-                self.wfile.write(http_response)
+            if urlparse(self.path).path == "/upload":
+                self.send_header("Content-type", "text/html; charset=utf-8")
+                self.end_headers()
+                with open('./upload.html', 'r', encoding="utf-8") as f:
+                    nodeContent = f.read()
+                    http_response = nodeContent.encode('utf-8')
+                    self.wfile.write(http_response)
+            else:
+                self.send_header("Content-type", "text/plain; charset=utf-8")
+                self.end_headers()
+                with open('/dev/shm/config.yaml', 'r', encoding="utf-8") as f:
+                    nodeContent = f.read()
+                    http_response = nodeContent.encode('utf-8')
+                    self.wfile.write(http_response)
         else:
             self.send_response(401)
             self.wfile.write(b'token error')
@@ -57,11 +65,16 @@ class Resquest(BaseHTTPRequestHandler):
             self.wfile.write(b'Error parsing form data.')
             return
 
-        file_item = form_data['file_name']
-        file_data = file_item.file.read()
-
-        with open('./nodes.txt', 'wb') as file:
-            file.write(file_data)
+        file_items = form_data.getlist('file')
+        for file_item in file_items:
+            file_data = None
+            if type(file_item) is not bytes:
+                file_data = file_item.file.read()
+                print(len(file_data))
+            else:
+                file_data = file_item
+            with open('./nodes.txt', 'wb') as file:
+                file.write(file_data)
 
         self.send_response(200)
         self.end_headers()

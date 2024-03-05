@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.6.0.js" type="text/javascript"></script>
+    <!-- <script src="./jquery-3.6.0.js" type="text/javascript"></script> -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+
+<body>
+    <form id="uploadForm" action="/upload" enctype="multipart/form-data" method="post" onsubmit="return submitFile()">
+        <div><input type="file" name="file" multiple></div>
+        <br>
+        <div><input type="submit" value="upload"> </div>
+    </form>
+    <script>
+        function submitFile() {
+            var files = $('#uploadForm')[0].file.files;
+            var token = getTokenFromQueryString();
+
+            for (var i = 0; i < files.length; i++) {
+                var formData = new FormData();
+                formData.append('file', files[i]);
+
+                $.ajax({
+                    url: "/upload?token=" + token + "&file_name=" + encodeURIComponent(files[i].name),
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        console.info("success", data);
+                    },
+                    error: function (data) {
+                        console.warn("fail", data);
+                    }
+                });
+            }
+
+            return false;
+        }
+
+        function getTokenFromQueryString() {
+            var paramsString = window.location.search.substring(1);
+            var paramsArray = paramsString.split('&');
+
+            for (var i = 0; i < paramsArray.length; i++) {
+                var param = paramsArray[i].split('=');
+                if (param[0] === "token") {
+                    return param[1];
+                }
+            }
+
+            return null;
+        }
+    </script>
+</body>
+
+</html>
