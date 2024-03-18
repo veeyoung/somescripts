@@ -13,7 +13,7 @@ spec:
       labels:
         app: postgres
     spec:
-      nodeName: node2
+#      nodeName: node2
       containers:
         - name: postgres
           image: postgres:latest
@@ -42,13 +42,13 @@ kind: Service
 metadata:
     name: postgres
     labels:
-    app: postgres
+      app: postgres
     namespace: postgres
 spec:
     ports:
     - name: postgres
-        port: 5432
-        nodePort: 30432
+      port: 5432
+      nodePort: 30432
     type: NodePort
     selector:
-    app: postgres
+      app: postgres
