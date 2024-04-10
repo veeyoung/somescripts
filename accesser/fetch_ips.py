@@ -103,7 +103,7 @@ def get_best_ip(ip_list: list) -> str:
 
 @retry(tries=3)
 def get_json(session: Any) -> Optional[list]:
-    url = 'https://github.gogodoge66.eu.org/https://raw.githubusercontent.com/521xueweihan/GitHub520/main/hosts.json'
+    url = 'http://github.gogodoge66.eu.org/https://raw.githubusercontent.com/521xueweihan/GitHub520/main/hosts.json'
     try:
         rs = session.get(url)
         data = json.loads(rs.text)
