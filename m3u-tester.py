@@ -9,6 +9,7 @@ import sys
 import time
 from urllib.request import urlopen
 import signal
+import concurrent.futures
 
 flag = True
 
@@ -24,14 +25,6 @@ class Item:
 
     def __json__(self):
         return {'extinf': self.extinf, 'url': self.url, 'speed': self.speed}
-
-
-class ItemJSONEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if hasattr(obj, "__json__"):
-            return obj.__json__()
-        return json.JSONEncoder.default(self, obj)
-
 
 class Downloader:
     def __init__(self, url):
@@ -110,7 +103,8 @@ def getStreamUrl(m3u8):
     return urls
 
 
-def downloadTester(downloader: Downloader):
+
+def get_speed(downloader):
     chunck_size = 10240
     try:
         with urlopen(downloader.url, timeout=2) as resp:
@@ -126,55 +120,55 @@ def downloadTester(downloader: Downloader):
         downloader.recive = -1
     downloader.endTime = time.time()
 
+def start_thread(item):
+    global flag, i
+    if not flag:
+        return
+    idx = item.extinf.rindex(',') + 1
+    if log:
+        print('测试：%s' % item.extinf[idx:])
+    url = item.url
+    stream_urls = []
+    if url.lower().endswith('.flv'):
+        stream_urls.append(url)
+    else:
+        stream_urls = getStreamUrl(url)
+    # 速度默认-1
+    speed = -1
+    if len(stream_urls) > 0:
+        if log:
+            for stream in stream_urls:
+                print('\t流：%s' % stream)
+        stream = stream_urls[0]
+        downloader = Downloader(stream)
+        get_speed(downloader)
+        speed = downloader.getSpeed()
+    item.speed = speed
+    if log:
+        print('\t速度：%d bytes/s' % item.speed)
 
 def start():
-    global flag
+    global flag, i
     path = os.getcwd()
     items = getAllM3UItems(path)
     if not len(items):
         print('没有找到任何源，退出。')
         sys.exit(0)
     print('发现项: %d' % len(items))
-    # 循环测速
-    i = 0
-    for item in items:
-        if not flag:
-            break
-        i += 1
-        idx = item.extinf.rindex(',') + 1
-        if log:
-            print('测试：%s' % item.extinf[idx:])
-        else:
-            print("\r", end="")
-            print("测试进度: {}%: ".format(i * 100 // len(items)), "▓" * (i * 50 // len(items)), end="")
-            sys.stdout.flush()
-        url = item.url
-        stream_urls = []
-        if url.lower().endswith('.flv'):
-            stream_urls.append(url)
-        else:
-            stream_urls = getStreamUrl(url)
-        # 速度默认-1
-        speed = -1
-        if len(stream_urls) > 0:
-            if log:
-                for stream in stream_urls:
-                    print('\t流：%s' % stream)
-            stream = stream_urls[0]
-            downloader = Downloader(stream)
-            downloadTester(downloader)
-            speed = downloader.getSpeed()
-        item.speed = speed
-        if log:
-            print('\t速度：%d bytes/s' % item.speed)
+    counter = 0
+    # 使用线程池限制并发数量为20
+    with concurrent.futures.ThreadPoolExecutor(max_workers=cocurrent) as executor:
+        # 提交任务到线程池
+        futures = [executor.submit(start_thread, item) for item in items]
 
-    if save_josn:
-        try:
-            # 包含测试结果，存入json
-            with open('result.json', 'w+', encoding='utf-8') as f:
-                json.dump(items, f, cls=ItemJSONEncoder)
-        except BaseException as e:
-            print('保存json失败 %s' % e)
+        # 等待所有任务完成
+        for future in concurrent.futures.as_completed(futures):
+            if not log:
+                counter += 1
+                print("\r", end="")
+                print("测试进度: {}%: ".format(counter * 100 // len(items)), "▓" * (counter * 50 // len(items)), end="")
+                sys.stdout.flush()
+    print()
 
     # 优质资源写入新文件
     with open('excellent.m3u', 'w+', encoding='utf-8') as f:
@@ -185,10 +179,10 @@ def start():
                 print(item.extinf, file=f)
                 print(item.url, file=f)
 
-
-save_josn = False
 log = False
 output_speed = 800
+# 并发数，越大越快，但是有的节目会失效
+cocurrent = 24
 if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
     start()
