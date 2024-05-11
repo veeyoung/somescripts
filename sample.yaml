@@ -1,10 +1,24 @@
 port: 7890
 socks-port: 7891
 allow-lan: false
-mode: Rule
+mode: rule
+
+#自定义 geodata url
+geox-url:
+  geoip: "https://github.gogodoge66.eu.org/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
+  geosite: "https://github.gogodoge66.eu.org/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+  mmdb: "https://github.gogodoge66.eu.org/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.metadb"
+  asn: "https://github.gogodoge66.eu.org/https://github.com/xishang0128/geoip/releases/download/latest/GeoLite2-ASN.mmdb"
+
+geo-auto-update: true # 是否自动更新 geodata
+geo-update-interval: 720 # 更新间隔，单位：小时
+
 ipv6: false
-log-level: warning
+log-level: error
 external-controller: 127.0.0.1:9090
+
+global-client-fingerprint: chrome
+
 dns:
   enable: true
   ipv6: false
@@ -30,55 +44,61 @@ dns:
     - 0.0.0.0/32
 proxies:
 proxy-groups:
-  - name: 🚀 节点选择
-    type: select
-    proxies:
-      - ♻️ 自动选择
-      - DIRECT
-  - name: ♻️ 自动选择
-    type: url-test
-    url: http://www.gstatic.com/generate_204
-    interval: 300
-    tolerance: 50
-    proxies:
-  - name: 🌍 国外媒体
-    type: select
-    proxies:
-      - 🚀 节点选择
-      - ♻️ 自动选择
-      - 🎯 全球直连
-  - name: 🤖 OpenAI
-    type: select
-    proxies:
-      - 🚀 节点选择
-  - name: Ⓜ️ 微软服务
-    type: select
-    proxies:
-      - 🎯 全球直连
-      - 🤖 OpenAI
-      - 🚀 节点选择
-  - name: 🔍 Google
-    type: select
-    proxies:
-      - 🚀 节点选择
-      - 🤖 OpenAI
-  - name: 🎯 全球直连
-    type: select
-    proxies:
-      - DIRECT
-      - 🚀 节点选择
-      - ♻️ 自动选择
-  - name: 🛑 全球拦截
-    type: select
-    proxies:
-      - REJECT
-      - DIRECT
-  - name: 🐟 漏网之鱼
-    type: select
-    proxies:
-      - 🚀 节点选择
-      - 🎯 全球直连
-      - ♻️ 自动选择
+- name: 🚀 节点选择
+  type: select
+  proxies:
+  - ♻️ 自动选择
+  - DIRECT
+- name: ♻️ 自动选择
+  type: url-test
+  url: https://www.youtube.com
+  interval: 300
+  tolerance: 50
+  proxies:
+- name: 🌍 国外媒体
+  type: select
+  proxies:
+  - 🚀 节点选择
+  - ♻️ 自动选择
+  - 🎯 全球直连
+- name: 🤝 Relay
+  type: relay
+  proxies:
+  - ♻️ 自动选择
+  - 🚀 节点选择
+- name: 🤖 OpenAI
+  type: select
+  proxies:
+  - 🚀 节点选择
+  proxies:
+- name: Ⓜ️ 微软服务
+  type: select
+  proxies:
+  - 🎯 全球直连
+  - 🤖 OpenAI
+  - 🚀 节点选择
+- name: 🔍 Google
+  type: select
+  proxies:
+  - 🚀 节点选择
+  - 🤖 OpenAI
+- name: 🎯 全球直连
+  type: select
+  proxies:
+  - DIRECT
+  - 🚀 节点选择
+  - ♻️ 自动选择
+- name: 🛑 全球拦截
+  type: select
+  proxies:
+  - REJECT
+  - DIRECT
+- name: 🐟 漏网之鱼
+  type: select
+  proxies:
+  - 🚀 节点选择
+  - 🎯 全球直连
+  - ♻️ 自动选择
 rules:
  - IP-CIDR,::/0,DIRECT
  - DOMAIN-SUFFIX,acl4.ssr,🎯 全球直连
@@ -1748,6 +1768,23 @@ rules:
  - DOMAIN-SUFFIX,tralog.ganji.com,🛑 全球拦截
  - DOMAIN-SUFFIX,up.qingdaonews.com,🛑 全球拦截
  - DOMAIN-SUFFIX,vaserviece.10jqka.com.cn,🛑 全球拦截
+ - DOMAIN-SUFFIX,config.cmpassport.com,🛑 全球拦截
+ - DOMAIN-SUFFIX,www.cmpassport.com,🛑 全球拦截
+ - DOMAIN-SUFFIX,wap.cmpassport.com,🛑 全球拦截
+ - DOMAIN-SUFFIX,onekey1.cmpassport.com,🛑 全球拦截
+ - DOMAIN-SUFFIX,log1.cmpassport.com,🛑 全球拦截
+ - DOMAIN-SUFFIX,smsks1.cmpassport.com,🛑 全球拦截
+ - DOMAIN-SUFFIX,verify.cmpassport.com,🛑 全球拦截
+ - DOMAIN-SUFFIX,opencloud.wostore.cn,🛑 全球拦截
+ - DOMAIN-SUFFIX,auth.wosms.cn,🛑 全球拦截
+ - DOMAIN-SUFFIX,id.mail.wo.cn,🛑 全球拦截
+ - DOMAIN-SUFFIX,mdn.open.wo.cn,🛑 全球拦截
+ - DOMAIN-SUFFIX,hmrz.wo.cn,🛑 全球拦截
+ - DOMAIN-SUFFIX,nishub1.10010.com,🛑 全球拦截
+ - DOMAIN-SUFFIX,enrichgw.10010.com,🛑 全球拦截
+ - DOMAIN-SUFFIX,id6.me,🛑 全球拦截
+ - DOMAIN-SUFFIX,open.e.189.cn,🛑 全球拦截
+ - DOMAIN-SUFFIX,Idk.,🛑 全球拦截
  - DOMAIN-SUFFIX,265.com,🎯 全球直连
  - DOMAIN-SUFFIX,2mdn.net,🎯 全球直连
  - DOMAIN-SUFFIX,alt1-mtalk.google.com,🎯 全球直连
@@ -1793,16 +1830,18 @@ rules:
  - DOMAIN-SUFFIX,steamchina.com,🎯 全球直连
  - DOMAIN-SUFFIX,steamcontent.com,🎯 全球直连
  - DOMAIN-SUFFIX,steamusercontent.com,🎯 全球直连
+ - DOMAIN,browser-intake-datadoghq.com,🤖 OpenAI
  - DOMAIN,static.cloudflareinsights.com,🤖 OpenAI
  - DOMAIN-SUFFIX,ai.com,🤖 OpenAI
  - DOMAIN-SUFFIX,algolia.net,🤖 OpenAI
  - DOMAIN-SUFFIX,api.statsig.com,🤖 OpenAI
  - DOMAIN-SUFFIX,auth0.com,🤖 OpenAI
- - DOMAIN-SUFFIX,cdn.cloudflare.net,🤖 OpenAI
- - DOMAIN-SUFFIX,challenges.cloudflare.com,🤖 OpenAI
+ - DOMAIN-SUFFIX,chatgpt.com,🤖 OpenAI
+ - DOMAIN-SUFFIX,chatgpt.livekit.cloud,🤖 OpenAI
  - DOMAIN-SUFFIX,client-api.arkoselabs.com,🤖 OpenAI
  - DOMAIN-SUFFIX,events.statsigapi.net,🤖 OpenAI
  - DOMAIN-SUFFIX,featuregates.org,🤖 OpenAI
+ - DOMAIN-SUFFIX,host.livekit.cloud,🤖 OpenAI
  - DOMAIN-SUFFIX,identrust.com,🤖 OpenAI
  - DOMAIN-SUFFIX,intercom.io,🤖 OpenAI
  - DOMAIN-SUFFIX,intercomcdn.com,🤖 OpenAI
@@ -1810,11 +1849,14 @@ rules:
  - DOMAIN-SUFFIX,oaistatic.com,🤖 OpenAI
  - DOMAIN-SUFFIX,oaiusercontent.com,🤖 OpenAI
  - DOMAIN-SUFFIX,observeit.net,🤖 OpenAI
- - DOMAIN-SUFFIX,poe.com,🤖 OpenAI
  - DOMAIN-SUFFIX,segment.io,🤖 OpenAI
  - DOMAIN-SUFFIX,sentry.io,🤖 OpenAI
  - DOMAIN-SUFFIX,stripe.com,🤖 OpenAI
+ - DOMAIN-SUFFIX,turn.livekit.cloud,🤖 OpenAI
  - DOMAIN-KEYWORD,openai,🤖 OpenAI
+ - IP-CIDR,24.199.123.28/32,🤖 OpenAI
+ - IP-CIDR,64.23.132.171/32,🤖 OpenAI
+ - IP-ASN,20473,🤖 OpenAI
  - DOMAIN-KEYWORD,1drv,Ⓜ️ 微软服务
  - DOMAIN-KEYWORD,microsoft,Ⓜ️ 微软服务
  - DOMAIN-SUFFIX,aadrm.com,Ⓜ️ 微软服务
